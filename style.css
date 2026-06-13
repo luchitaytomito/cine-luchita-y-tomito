@@ -23,6 +23,9 @@
 /* ============================================
    BODY
    ============================================ */
+html {
+    background-color: #020710; /* Evita bordes blancos al hacer scroll/rebote en celulares */
+}
 body {
     font-family: 'Outfit', sans-serif;
     min-height: 100vh;
