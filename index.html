@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Cine de Luchita y Tomito</title>
+    <meta name="description" content="El cine privado de Tomás y Luciana para elegir la peli de hoy">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1.8">
+</head>
+<body>
+
+    <!-- Fondo con fotos flotantes de Tomy y Luchi -->
+    <div class="floating-background">
+        <img src="assets/foto1.jpg" class="float-img img1" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto2.jpg" class="float-img img2" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto3.jpg" class="float-img img3" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <!-- Agrega más fotos a la carpeta assets/ y se mostrarán automáticamente acá -->
+        <img src="assets/foto4.jpg" class="float-img img4" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto5.jpg" class="float-img img5" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto6.jpg" class="float-img img6" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto7.jpg" class="float-img img7" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto8.jpg" class="float-img img8" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto9.jpg" class="float-img img9" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto10.jpg" class="float-img img10" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto11.jpg" class="float-img img11" alt="Luchi y Tomy" onerror="this.style.display='none'">
+        <img src="assets/foto12.jpg" class="float-img img12" alt="Luchi y Tomy" onerror="this.style.display='none'">
+    </div>
+
+    <!-- Estrellas decorativas -->
+    <div class="stars" id="stars"></div>
+
+    <!-- ===================== TARJETA PRINCIPAL ===================== -->
+    <div class="app-wrapper">
+        <div class="glass-card">
+
+            <!-- Header -->
+            <div class="header">
+                <div class="heart-decoration">❤️</div>
+                <h1>🎬 Cine Luchi & Tomito</h1>
+                <div class="couple-badges">
+                    <span class="badge badge-luchi">🌸 Luciana</span>
+                    <span class="badge-heart">💕</span>
+                    <span class="badge badge-tomy">🎮 Tomás</span>
+                </div>
+                <button class="btn-open-sidebar" onclick="openSidebar()">🍿 Ver Pelis Vistas</button>
+            </div>
+
+            <!-- Agregar película -->
+            <div class="section add-section">
+                <h2 class="section-title">➕ Agregar Película</h2>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <span class="input-icon">🎬</span>
+                        <input type="text" id="movieName" placeholder="Nombre de la película..." autocomplete="off">
+                    </div>
+                    <button id="addBtn" onclick="addMovie()">
+                        <span class="btn-icon">+</span> Agregar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Botón mágico -->
+            <button class="magic-btn" id="magicBtn" onclick="pickRandomMovie()">
+                <span class="magic-icon">🎲</span>
+                <span class="magic-text">¡Elegir Peli para Hoy!</span>
+                <span class="magic-sparkle">✨</span>
+            </button>
+
+            <!-- Película ganadora -->
+            <div id="winnerDisplay" class="winner-display hidden">
+                <div class="winner-header">
+                    <span class="winner-crown">👑</span>
+                    <h3>¡La peli de hoy es!</h3>
+                    <span class="winner-crown">👑</span>
+                </div>
+                <div class="winner-card">
+                    <div class="winner-poster-wrap">
+                        <img id="winnerImage" src="" alt="Póster">
+                        <div id="winnerPosterPlaceholder" class="winner-poster-placeholder hidden"></div>
+                    </div>
+                    <div class="winner-info">
+                        <h4 id="winnerTitle"></h4>
+                        <div id="winnerMeta" class="winner-meta"></div>
+                        <p id="winnerPlot" class="winner-plot"></p>
+                        <div class="winner-actions">
+                            <button class="btn-reroll" onclick="pickRandomMovie()">🔀 Otra vez</button>
+                            <button class="btn-mark-watched" onclick="markWinnerAsWatched()">👀 Ya la vimos</button>
+                            <button class="btn-remove" onclick="removeWinner()">🗑️ Sacar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de películas -->
+            <div class="section movies-section">
+                <div class="movies-header">
+                    <h2 class="section-title">🎞️ Pendientes</h2>
+                    <span id="movieCount" class="movie-count">0 pelis</span>
+                </div>
+                <div id="moviesList" class="movies-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== SIDEBAR PELIS VISTAS ===================== -->
+    <div id="sidebarOverlay" class="sidebar-overlay hidden" onclick="closeSidebar()"></div>
+    <div id="watchedSidebar" class="watched-sidebar">
+        <div class="sidebar-header">
+            <h2>🍿 Pelis Vistas</h2>
+            <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+        </div>
+        <span id="watchedCount" class="movie-count sidebar-count">0 pelis</span>
+        <div class="sidebar-content">
+            <div id="watchedList" class="movies-grid watched-grid"></div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL DETALLE PELI VISTA ===================== -->
+    <div id="watchedViewModal" class="watched-view-modal hidden" onclick="if(event.target===this)closeWatchedView()">
+        <div class="watched-view-card">
+            <button class="wv-close" onclick="closeWatchedView()">✕</button>
+
+            <!-- Poster con fondo blur -->
+            <div class="wv-poster-section">
+                <div id="wvPosterBg" class="wv-poster-bg"></div>
+                <img id="wvPosterImg" class="wv-poster-img" src="" alt="Póster">
+                <div id="wvPosterPh" class="wv-poster-ph hidden"></div>
+            </div>
+
+            <div class="wv-content">
+                <h2 id="wvTitle" class="wv-title"></h2>
+                <div id="wvMeta" class="wv-meta"></div>
+
+                <div class="wv-divider"></div>
+
+                <div id="wvActorsWrap" class="wv-field hidden">
+                    <span class="wv-field-label">🌟 Actores</span>
+                    <p id="wvActors" class="wv-field-value"></p>
+                </div>
+                <div id="wvDirectorWrap" class="wv-field hidden">
+                    <span class="wv-field-label">🎬 Director</span>
+                    <p id="wvDirector" class="wv-field-value"></p>
+                </div>
+                <div id="wvPlotWrap" class="wv-field hidden">
+                    <span class="wv-field-label">📝 Sinopsis</span>
+                    <p id="wvPlot" class="wv-field-value wv-plot"></p>
+                </div>
+
+                <!-- Sección de Valoración con Estrellas -->
+                <div class="wv-rating-section">
+                    <div class="wv-rating-title">⭐ Valoración</div>
+                    <div class="wv-rating-row">
+                        <span class="wv-rating-label"><span class="emoji">🌸</span> Luchita</span>
+                        <div class="wv-stars" id="wvStarsLuchi"></div>
+                    </div>
+                    <div class="wv-rating-row">
+                        <span class="wv-rating-label"><span class="emoji">🎮</span> Tomito</span>
+                        <div class="wv-stars" id="wvStarsTomy"></div>
+                    </div>
+                </div>
+
+                <div class="wv-actions">
+                    <button class="wv-btn-restore" onclick="unwatchFromView()">↺ Devolver a la ruleta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL VER PELÍCULA ===================== -->
+    <div id="viewModal" class="modal-overlay hidden" onclick="handleViewOverlayClick(event)">
+        <div class="view-modal-card" id="viewModalCard">
+            <button class="modal-close view-modal-close" onclick="closeViewModal()">✕</button>
+
+            <div class="view-modal-body">
+                <!-- Póster -->
+                <div class="view-poster-wrap">
+                    <img id="viewPoster" src="" alt="Póster" class="view-poster">
+                    <div id="viewPosterPlaceholder" class="view-poster-placeholder hidden"></div>
+                    <div class="view-poster-glow"></div>
+                </div>
+
+                <!-- Info -->
+                <div class="view-info">
+                    <h2 id="viewTitle" class="view-title"></h2>
+
+                    <div id="viewMeta" class="view-meta"></div>
+
+                    <div class="view-divider"></div>
+
+                    <div id="viewActorsWrap" class="view-field hidden">
+                        <span class="view-field-label">🌟 Actores</span>
+                        <p id="viewActors" class="view-field-value"></p>
+                    </div>
+
+                    <div id="viewDirectorWrap" class="view-field hidden">
+                        <span class="view-field-label">🎬 Director</span>
+                        <p id="viewDirector" class="view-field-value"></p>
+                    </div>
+
+                    <div id="viewPlotWrap" class="view-field hidden">
+                        <span class="view-field-label">📝 Sinopsis</span>
+                        <p id="viewPlot" class="view-field-value view-plot"></p>
+                    </div>
+
+                    <div class="view-actions">
+                        <button class="btn-view-watched" onclick="toggleWatchedFromView()">👀 Ya la vimos</button>
+                        <button class="btn-view-edit" onclick="switchToEdit()">✏️ Editar</button>
+                        <button class="btn-view-delete" onclick="deleteFromView()">🗑️ Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL EDITAR PELÍCULA ===================== -->
+    <div id="editModal" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
+        <div class="modal-card" id="editModalCard">
+
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-icon">✏️</span>
+                    <h2 class="modal-title">Editar Película</h2>
+                </div>
+                <button class="modal-close" onclick="closeEditModal()" id="modalCloseBtn">✕</button>
+            </div>
+
+            <!-- Vista previa del póster + zona de imagen -->
+            <div class="poster-section">
+                <div class="poster-preview-wrap">
+                    <img id="posterPreview" class="poster-preview" src="" alt="Póster">
+                    <div id="posterPreviewPlaceholder" class="poster-preview-placeholder">
+                        <span>🎬</span>
+                        <small>Sin imagen</small>
+                    </div>
+                </div>
+                <div class="poster-controls">
+                    <p class="poster-controls-label">📸 Imagen del póster</p>
+
+                    <!-- Subir desde la computadora -->
+                    <label class="upload-btn" for="posterFile">
+                        📁 Subir desde mi PC
+                        <input type="file" id="posterFile" accept="image/*" onchange="handleFileUpload(event)">
+                    </label>
+
+                    <!-- O pegar una URL -->
+                    <div class="url-input-wrap">
+                        <input type="text" id="posterUrl" placeholder="O pegá una URL de imagen..." oninput="handleUrlInput()">
+                    </div>
+
+                    <button class="btn-clear-poster" onclick="clearPoster()">🗑️ Quitar imagen</button>
+                </div>
+            </div>
+
+            <!-- Campos del formulario -->
+            <div class="modal-form">
+                <input type="hidden" id="editMovieId">
+
+                <div class="form-row">
+                    <div class="form-group full">
+                        <label>🎬 Título</label>
+                        <input type="text" id="editTitle" placeholder="Nombre de la película">
+                    </div>
+                </div>
+
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label>📅 Año</label>
+                        <input type="text" id="editYear" placeholder="2024">
+                    </div>
+                    <div class="form-group">
+                        <label>⭐ Puntaje IMDb</label>
+                        <div class="rating-input-wrap">
+                            <input type="number" id="editRating" placeholder="8.5" min="0" max="10" step="0.1">
+                            <span class="rating-suffix">/10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label>🎭 Género</label>
+                        <input type="text" id="editGenre" placeholder="Drama, Comedia...">
+                    </div>
+                    <div class="form-group">
+                        <label>⏱️ Duración</label>
+                        <input type="text" id="editDuration" placeholder="120 min">
+                    </div>
+                </div>
+
+                <div class="form-group full">
+                    <label>🎬 Director</label>
+                    <input type="text" id="editDirector" placeholder="Nombre del director">
+                </div>
+
+                <div class="form-group full">
+                    <label>🎭 Actores principales</label>
+                    <input type="text" id="editActors" placeholder="Actor 1, Actor 2, Actor 3...">
+                </div>
+
+                <div class="form-group full">
+                    <label>📝 Sinopsis</label>
+                    <textarea id="editPlot" placeholder="Descripción de la película..." rows="3"></textarea>
+                </div>
+            </div>
+
+            <!-- Acciones del modal -->
+            <div class="modal-actions">
+                <button class="btn-modal-cancel" onclick="closeEditModal()">Cancelar</button>
+                <button class="btn-modal-save" onclick="saveEdit()">💾 Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- ===================== RULETA CINEMATOGRÁFICA ===================== -->
+    <div id="rouletteModal" class="roulette-overlay hidden">
+
+        <!-- FASE 1: Ruleta girando -->
+        <div id="roulettePhase1" class="roulette-phase">
+            <div class="roulette-top">
+                <div class="roulette-hearts-row">💕 💕 💕</div>
+                <h2 class="roulette-heading">¿Qué vemos esta noche?</h2>
+                <p class="roulette-sub">Luchi <span class="amp">&</span> Tomy</p>
+            </div>
+
+            <!-- Cinta de pósters -->
+            <div class="reel-viewport">
+                <div class="reel-fade reel-fade-left"></div>
+                <div class="reel-track" id="reelTrack"></div>
+                <div class="reel-fade reel-fade-right"></div>
+                <div class="reel-selector-frame">
+                    <span class="reel-selector-label">🎬</span>
+                </div>
+            </div>
+
+            <p class="roulette-status" id="rouletteStatus">Eligiendo...</p>
+        </div>
+
+        <!-- FASE 2: Revelación dramática -->
+        <div id="roulettePhase2" class="roulette-reveal hidden">
+            <!-- Fondo borroso con el póster de la película -->
+            <div class="reveal-bg" id="revealBg"></div>
+            <div class="reveal-vignette"></div>
+
+            <!-- Confeti -->
+            <div class="confetti-wrap" id="confettiWrap"></div>
+
+            <!-- Contenido central -->
+            <div class="reveal-card">
+                <p class="reveal-label">💕 Esta noche Luchi &amp; Tomy ven 💕</p>
+
+                <div class="reveal-poster-wrap">
+                    <img id="revealPoster" class="reveal-poster" src="" alt="Póster">
+                    <div id="revealPosterPh" class="reveal-poster-ph hidden"></div>
+                    <div class="reveal-poster-shine"></div>
+                </div>
+
+                <h2 id="revealTitle" class="reveal-title"></h2>
+                <div id="revealMeta2" class="reveal-meta"></div>
+                <p id="revealPlot2" class="reveal-plot"></p>
+
+                <div class="reveal-actions">
+                    <button class="reveal-btn-ok"     onclick="closeRoulette()">🎉 ¡A verla!</button>
+                    <button class="reveal-btn-reroll" onclick="pickRandomMovie()">🔀 Otra</button>
+                    <button class="reveal-btn-watched" onclick="markRouletteAsWatched()">👀 Ya la vimos</button>
+                    <button class="reveal-btn-remove" onclick="removeAndClose()">🗑️ Sacar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, setDoc, doc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmW2SZtc0ssi6NqP6LqerXB5-tXuawGFs",
+            authDomain: "cineluchitaytomito.firebaseapp.com",
+            projectId: "cineluchitaytomito",
+            storageBucket: "cineluchitaytomito.firebasestorage.app",
+            messagingSenderId: "164567638915",
+            appId: "1:164567638915:web:897221b3eec10a7a83ccb6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Exponer a window para usarlo en script.js
+        window.firebaseDB = {
+            db, collection, onSnapshot, setDoc, doc, deleteDoc, writeBatch
+        };
+
+        // Disparar evento para que script.js sepa que ya cargó
+        window.dispatchEvent(new Event('firebaseLoaded'));
+    </script>
+    <script src="script.js?v=1.8"></script>
+</body>
+</html>
