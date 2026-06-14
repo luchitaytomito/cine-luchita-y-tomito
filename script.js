@@ -1029,8 +1029,10 @@ function buildReel(winnerMovie) {
     // Repetimos la lista varias veces (mezclada) para dar un giro largo
     const passes = 6;
     const allCards = [];
+    const unwatched = movies.filter(m => !m.watched);
+    const pool = unwatched.length > 3 ? unwatched : movies;
     for (let p = 0; p < passes; p++) {
-        allCards.push(...shuffle(movies));
+        allCards.push(...shuffle(pool));
     }
     
     // Colocamos al ganador cerca del final, pero dejando algunas pelis después
@@ -1074,10 +1076,12 @@ function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 function easeOutQuint(t) { return 1 - Math.pow(1 - t, 5); }
 
 async function pickRandomMovie() {
-    if (movies.length === 0) { showToast('¡Primero agreguen algunas pelis! 🎬'); return; }
+    const unwatched = movies.filter(m => !m.watched);
+    if (unwatched.length === 0) { showToast('¡Primero agreguen algunas pelis pendientes! 🎬'); return; }
 
     // Elegir ganadora
-    const idx    = Math.floor(Math.random() * movies.length);
+    const randomUnwatched = unwatched[Math.floor(Math.random() * unwatched.length)];
+    const idx    = movies.findIndex(m => m.id === randomUnwatched.id);
     const winner = movies[idx];
     currentWinnerIndex = idx;
 
