@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=1.10">
+    <link rel="stylesheet" href="style.css?v=1.12">
 </head>
 <body>
 
@@ -166,7 +166,8 @@
                 </div>
 
                 <div class="wv-actions">
-                    <button class="wv-btn-restore" onclick="unwatchFromView()">↺ Devolver a la ruleta</button>
+                    <button class="wv-btn-edit" onclick="switchToEditFromWatched()">✏️ Editar</button>
+                    <button class="wv-btn-restore" onclick="unwatchFromView()">🔄 Devolver a la ruleta</button>
                 </div>
             </div>
         </div>
@@ -307,6 +308,11 @@
                     <label>📝 Sinopsis</label>
                     <textarea id="editPlot" placeholder="Descripción de la película..." rows="3"></textarea>
                 </div>
+
+                <div class="form-group full hidden" id="editWatchedDateWrap">
+                    <label>📅 Fecha en que la vimos</label>
+                    <input type="date" id="editWatchedDate" class="date-input">
+                </div>
             </div>
 
             <!-- Acciones del modal -->
@@ -401,6 +407,6 @@
         // Disparar evento para que script.js sepa que ya cargó
         window.dispatchEvent(new Event('firebaseLoaded'));
     </script>
-    <script src="script.js?v=1.10"></script>
+    <script src="script.js?v=1.12"></script>
 </body>
 </html>

@@ -500,6 +500,7 @@ input::placeholder, textarea::placeholder { color:rgba(255,255,255,.38); }
 
 .form-group input[type="text"],
 .form-group input[type="number"],
+.form-group input[type="date"],
 .form-group textarea {
     width:100%; padding:11px 14px;
     background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.12);
@@ -1021,12 +1022,25 @@ input::placeholder, textarea::placeholder { color:rgba(255,255,255,.38); }
 .watched-info {
     flex:1; display:flex; flex-direction:column; gap:2px; min-width:0;
 }
+.watched-title-row {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 2px;
+}
 .watched-info .movie-item-title {
-    font-size:.9rem; font-weight:700; color:var(--text);
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    font-size:1.05rem; margin-bottom:0;
+    flex: 1; min-width: 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .watched-info .watched-year {
     font-size:.72rem; color:var(--text-muted);
+}
+.watched-date-badge {
+    background:rgba(255, 222, 0, 0.85); color:#1a1a1a;
+    padding:2px 6px; border-radius:4px;
+    font-size:.65rem; font-weight:800;
+    white-space:nowrap; flex-shrink:0;
+}
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
 }
 .watched-mini-stars {
     display:flex; gap:2px; margin-top:4px;
@@ -1244,20 +1258,20 @@ input::placeholder, textarea::placeholder { color:rgba(255,255,255,.38); }
     margin-top: 18px;
 }
 
-.wv-btn-restore {
+.wv-btn-restore, .wv-btn-edit { 
     padding: 10px 20px; 
     border-radius: 30px;
     background: rgba(255,255,255,.08); 
     border: 1px solid rgba(255,255,255,.15);
     color: rgba(255,255,255,.7); 
-    font-family: 'Outfit', sans-serif; /* Tu tipografía */
+    font-family: 'Outfit', sans-serif;
     font-size: .85rem; 
     font-weight: 600; 
     cursor: pointer; 
     transition: all .2s;
 }
 
-.wv-btn-restore:hover { 
+.wv-btn-restore:hover, .wv-btn-edit:hover { 
     background: rgba(255,255,255,.15); 
     color: #fff; 
 }

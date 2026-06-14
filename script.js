@@ -360,6 +360,7 @@ function markWinnerAsWatched() {
     const winner = movies[currentWinnerIndex];
     winner.watched = true;
     if (!winner.ratings) winner.ratings = { tomy: 0, luchi: 0 };
+    if (!winner.watchedDate) winner.watchedDate = getLocalYYYYMMDD();
     saveMovies();
     renderMoviesList();
     document.getElementById('winnerDisplay').classList.add('hidden');
@@ -373,6 +374,7 @@ function markRouletteAsWatched() {
     const winner = movies[currentWinnerIndex];
     winner.watched = true;
     if (!winner.ratings) winner.ratings = { tomy: 0, luchi: 0 };
+    if (!winner.watchedDate) winner.watchedDate = getLocalYYYYMMDD();
     saveMovies();
     renderMoviesList();
     document.getElementById('rouletteModal').classList.add('hidden');
@@ -426,6 +428,14 @@ const PRECARGADAS_VISTAS = [
     'Harry Potter y la piedra filosofal',
     'Super cool', 'Supercool'
 ];
+
+function getLocalYYYYMMDD() {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
 
 function initFirebaseMovies() {
     const { db, onSnapshot, doc, setDoc } = window.firebaseDB;
@@ -577,10 +587,21 @@ function renderMoviesList() {
                 `<span class="mini-star ${avgRating >= v ? 'filled' : ''}">★</span>`
             ).join('');
 
+            let dateBadgeHTML = '';
+            if (movie.watchedDate) {
+                const parts = movie.watchedDate.split('-');
+                if (parts.length === 3) {
+                    dateBadgeHTML = `<span class="watched-date-badge">📅 ${parts[2]}/${parts[1]}/${parts[0]}</span>`;
+                }
+            }
+
             item.innerHTML = `
                 ${posterHTML}
                 <div class="watched-info">
-                    <div class="movie-item-title">${movie.title}</div>
+                    <div class="watched-title-row">
+                        <div class="movie-item-title">${movie.title}</div>
+                        ${dateBadgeHTML}
+                    </div>
                     ${movie.year ? `<span class="watched-year">📅 ${movie.year}</span>` : ''}
                     <div class="watched-mini-stars">${miniStarsHTML}</div>
                 </div>
@@ -830,6 +851,12 @@ function switchToEdit() {
     openEditModal(id);
 }
 
+function switchToEditFromWatched() {
+    const id = watchedViewId;
+    closeWatchedView();
+    openEditModal(id);
+}
+
 // Desde el modal de vista → eliminar
 function deleteFromView() {
     const id = viewingId;
@@ -846,6 +873,7 @@ function toggleWatchedFromView() {
     
     movie.watched = true;
     if (!movie.ratings) movie.ratings = { tomy: 0, luchi: 0 };
+    if (!movie.watchedDate) movie.watchedDate = getLocalYYYYMMDD();
     saveMovies();
     showToast(`🍿 "${movie.title}" movida a Vistas!`);
 }
@@ -869,6 +897,14 @@ function openEditModal(id) {
     document.getElementById('editActors').value    = movie.actors   || '';
     document.getElementById('editPlot').value      = movie.plot     || '';
     document.getElementById('posterUrl').value     = '';
+
+    const dateWrap = document.getElementById('editWatchedDateWrap');
+    if (movie.watched) {
+        dateWrap.classList.remove('hidden');
+        document.getElementById('editWatchedDate').value = movie.watchedDate || '';
+    } else {
+        dateWrap.classList.add('hidden');
+    }
 
     updatePosterPreview(movie.image);
 
@@ -946,6 +982,10 @@ function saveEdit() {
     movie.director = document.getElementById('editDirector').value.trim();
     movie.actors   = document.getElementById('editActors').value.trim();
     movie.plot     = document.getElementById('editPlot').value.trim();
+    
+    if (movie.watched) {
+        movie.watchedDate = document.getElementById('editWatchedDate').value;
+    }
 
     if (pendingImageBase64) {
         movie.image = pendingImageBase64;
